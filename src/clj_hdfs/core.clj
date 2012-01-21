@@ -26,3 +26,12 @@
 (defn create-sequence-reader
   [conf path]
   (SequenceFile$Reader. (.getFileSystem path conf) path conf))
+
+(defn reader-seq
+  [rdr key val]  
+  (lazy-seq
+   (loop [xs '()]
+     (let [more? (.next rdr key val)]
+       (if (not more?)
+         xs
+         (recur (cons {(.get key) (.get val)} xs)))))))
