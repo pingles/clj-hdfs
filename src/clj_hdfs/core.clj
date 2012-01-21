@@ -2,7 +2,7 @@
   (:import [org.apache.hadoop.conf Configuration]
            [org.apache.hadoop.mapred JobConf]
            [org.apache.hadoop.fs Path]
-           [org.apache.hadoop.io SequenceFile]))
+           [org.apache.hadoop.io SequenceFile SequenceFile$Reader]))
 
 (defn create-configuration
   [m]
@@ -22,3 +22,7 @@
                              path
                              key-class
                              val-class))
+
+(defn create-sequence-reader
+  [conf path]
+  (SequenceFile$Reader. (.getFileSystem path conf) path conf))
