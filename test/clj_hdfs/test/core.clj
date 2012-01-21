@@ -1,6 +1,4 @@
 (ns clj-hdfs.test.core
-  (:use [clj-hdfs.core])
-  (:use [clojure.test]))
+  (:use [clojure.test]
+        [clj-hdfs.core]))
 
-(deftest replace-me ;; FIXME: write
-  (is false "No tests have been written."))
