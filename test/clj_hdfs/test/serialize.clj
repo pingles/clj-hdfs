@@ -1,5 +1,5 @@
 (ns clj-hdfs.test.serialize
-  (:import [org.apache.hadoop.io BytesWritable DoubleWritable LongWritable])
+  (:import [org.apache.hadoop.io BytesWritable DoubleWritable LongWritable Text])
   (:use [clojure.test]
         [clj-hdfs.serialize] :reload))
 
@@ -22,4 +22,11 @@
       (set-writable w bytes)
       (is (= 5 (.getSize w)))
       (is (= bytes
-             (take 5 (.get w)))))))
+             (take 5 (.get w))))))
+
+  (testing "Text"
+    (is (= (writable "Hello, Paul!") (Text. "Hello, Paul!")))
+    (is (= "Hello, Paul!" (.toString (writable "Hello, Paul!"))))
+    (let [w (writable "foo")]
+      (set-writable w "bar")
+      (is (= "bar" (.toString w))))))
