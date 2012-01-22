@@ -1,5 +1,5 @@
 (ns clj-hdfs.serialize
-  (:import [org.apache.hadoop.io BytesWritable DoubleWritable LongWritable Text]))
+  (:import [org.apache.hadoop.io BytesWritable DoubleWritable LongWritable Text FloatWritable]))
 
 (defprotocol ToWritable
   (writable [x] "Creates a new instance of a Writable class")
@@ -12,6 +12,8 @@
   (writable [x] (DoubleWritable. x))
   String
   (writable [x] (Text. x))
+  Float
+  (writable [x] (FloatWritable. x))
   
   LongWritable
   (set-writable [w x] (.set w x))
@@ -19,5 +21,7 @@
   (set-writable [w x] (.set w x))
   BytesWritable
   (set-writable [w xs] (.set w (byte-array xs) 0 (count xs)))
+  FloatWritable
+  (set-writable [w x] (.set w x))
   Text
   (set-writable [w x] (.set w x)))
