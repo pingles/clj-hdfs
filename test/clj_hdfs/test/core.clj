@@ -3,7 +3,7 @@
            [org.apache.hadoop.io LongWritable])
   (:use [clojure.test]
         [clj-hdfs.serialize :only (writable)]
-        [clj-hdfs.core :only (path reader-seq create-sequence-writer appender create-sequence-reader create-configuration filesystem exists?)] :reload))
+        [clj-hdfs.core :only (path reader-seq create-sequence-writer appender create-sequence-reader create-configuration filesystem exists? filesystem delete)] :reload))
 
 (def config (create-configuration {}))
 
@@ -21,7 +21,13 @@
             record (first records)]
         (is (seq? records))
         (is (= 1 (count records)))
-        (is (= {30 10} record))))))
+        (is (= {30 10} record))))
+
+    (let [fs (filesystem config)
+          p (path "./tmp/test.seq")]
+      (is (true? (exists? fs p)))
+      (delete fs p)
+      (is (false? (exists? fs p))))))
 
 ;; factory fn to make it easier to write a sequence of {k v}
 ;; records rather than calling append directly
@@ -39,3 +45,4 @@
         p (path "./tmp/exists.seq")]
     (with-open [writer (create-sequence-writer config p LongWritable LongWritable)]
       (is (exists? fs p)))))
+

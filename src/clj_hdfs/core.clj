@@ -19,6 +19,12 @@
   [fs path]
   (.exists fs path))
 
+(defn delete
+  "Deletes a path. Defaults to a recursive delete if path
+   is a directory."
+  [fs path & {:keys [recursive] :or {recursive true}}]
+  (.delete fs path recursive))
+
 (defn filesystem
   [config]
   (FileSystem/get config))
