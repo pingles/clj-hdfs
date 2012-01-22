@@ -30,6 +30,11 @@
   [fs path]
   (.mkdirs fs path))
 
+(defn open
+  "Opens an InputStream to the specified path."
+  [fs path]
+  (.open fs path))
+
 (defn rename
   [fs src dst]
   (.rename fs src dst))
