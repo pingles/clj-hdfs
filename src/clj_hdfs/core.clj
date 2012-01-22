@@ -30,6 +30,10 @@
   [fs path]
   (.mkdirs fs path))
 
+(defn rename
+  [fs src dst]
+  (.rename fs src dst))
+
 (defn filesystem
   [config]
   (FileSystem/get config))
