@@ -1,7 +1,8 @@
 (ns clj-hdfs.core
-  (:import [org.apache.hadoop.conf Configuration]
+  (:import [java.util Date]
+           [org.apache.hadoop.conf Configuration]
            [org.apache.hadoop.mapred JobConf]
-           [org.apache.hadoop.fs Path FileSystem]
+           [org.apache.hadoop.fs Path FileSystem FileStatus]
            [org.apache.hadoop.io SequenceFile SequenceFile$Reader])
   (:use [clj-hdfs.serialize]))
 
@@ -29,6 +30,17 @@
   [config]
   (FileSystem/get config))
 
+(defn list-statuses
+  "Retrieves statuses for a path: files and directories
+   contained within."
+  [fs path]
+  (map (fn [x] {:path (.getPath x)
+               :length (.getLen x)
+               :is-dir (.isDir x)
+               :modified (Date. (.getModificationTime x))
+               :replication (.getReplication x)})
+       (.listStatus fs path)))
+
 (defn create-sequence-writer
   [conf path key-class val-class]
   (SequenceFile/createWriter (.getFileSystem path conf)
@@ -54,6 +66,8 @@
   (SequenceFile$Reader. (.getFileSystem path conf) path conf))
 
 (defn reader-seq
+  "Returns a lazy sequence of maps representing data
+   within a sequence file."
   [rdr key val]  
   (lazy-seq
    (loop [xs '()]
