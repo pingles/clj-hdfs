@@ -3,7 +3,7 @@
            [org.apache.hadoop.io LongWritable])
   (:use [clojure.test]
         [clj-hdfs.serialize :only (writable)]
-        [clj-hdfs.core :only (path reader-seq create-sequence-writer appender create-sequence-reader create-configuration filesystem exists? filesystem delete list-statuses)] :reload))
+        [clj-hdfs.core :only (path reader-seq create-sequence-writer appender create-sequence-reader create-configuration filesystem exists? filesystem delete list-statuses mkdirs)] :reload))
 
 (def config (create-configuration {}))
 
@@ -27,6 +27,14 @@
       (is (true? (exists? fs p)))
       (delete fs p)
       (is (false? (exists? fs p))))))
+
+(deftest directories
+  (let [fs (filesystem config)
+        p (path "./tmp/test-dir")]
+    (delete fs p)
+    (is (false? (exists? fs p)))
+    (mkdirs fs p)
+    (is (true? (exists? fs p)))))
 
 (deftest sequence-file-appending
   (let [tmp-path "./tmp/appender.seq"]

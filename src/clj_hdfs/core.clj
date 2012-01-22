@@ -26,6 +26,10 @@
   [fs path & {:keys [recursive] :or {recursive true}}]
   (.delete fs path recursive))
 
+(defn mkdirs
+  [fs path]
+  (.mkdirs fs path))
+
 (defn filesystem
   [config]
   (FileSystem/get config))
