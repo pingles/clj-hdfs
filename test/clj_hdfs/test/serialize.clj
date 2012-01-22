@@ -1,5 +1,5 @@
 (ns clj-hdfs.test.serialize
-  (:import [org.apache.hadoop.io BytesWritable LongWritable])
+  (:import [org.apache.hadoop.io BytesWritable DoubleWritable LongWritable])
   (:use [clojure.test]
         [clj-hdfs.serialize] :reload))
 
@@ -9,6 +9,12 @@
     (let [w (LongWritable. )]
       (set-writable w 100)
       (is (= 100 (.get w)))))
+
+  (testing "Doubles"
+    (is (= (writable (double 50)) (DoubleWritable. (double 50))))
+    (let [w (DoubleWritable. )]
+      (set-writable w 50)
+      (is (= (double 50)) (.get w))))
 
   (testing "Bytes"
     (let [bytes (map byte [1 2 3 4 5])
