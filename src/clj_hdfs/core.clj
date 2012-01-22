@@ -11,7 +11,6 @@
     c))
 
 (defn path
-  "Creates a Path from the specified path."
   [str]
   (Path. str))
 
