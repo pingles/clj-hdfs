@@ -1,5 +1,5 @@
 (ns clj-hdfs.test.serialize
-  (:import [org.apache.hadoop.io BytesWritable DoubleWritable FloatWritable LongWritable Text])
+  (:import [org.apache.hadoop.io BytesWritable DoubleWritable FloatWritable LongWritable IntWritable Text])
   (:use [clojure.test]
         [clj-hdfs.serialize] :reload))
 
@@ -36,4 +36,11 @@
     (is (= (float 30.5) (.get (writable (float 30.5)))))
     (let [w (writable (float 30.5))]
       (set-writable w (float 99.0))
-      (is (= (float 99.0) (.get w))))))
+      (is (= (float 99.0) (.get w)))))
+
+  (testing "Integers"
+    (is (= (writable (Integer/valueOf 10)) (IntWritable. 10)))
+    (is (= 10 (.get (writable (Integer/valueOf 10)))))
+    (let [w (writable (Integer/valueOf 10))]
+      (set-writable w 19)
+      (is (= 19 (.get w))))))
