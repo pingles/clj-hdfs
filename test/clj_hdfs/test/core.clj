@@ -3,7 +3,7 @@
            [org.apache.hadoop.io LongWritable])
   (:use [clojure.test]
         [clj-hdfs.serialize :only (writable)]
-        [clj-hdfs.core :only (path reader-seq create-sequence-writer create-sequence-reader create-configuration)] :reload))
+        [clj-hdfs.core :only (path reader-seq create-sequence-writer create-sequence-reader create-configuration filesystem exists?)] :reload))
 
 (def config (create-configuration {}))
 
@@ -23,3 +23,8 @@
         (is (= 1 (count records)))
         (is (= {30 10} record))))))
 
+(deftest files-exist
+  (let [fs (filesystem config)
+        p (path "./tmp/exists.seq")]
+    (with-open [writer (create-sequence-writer config p LongWritable LongWritable)]
+      (is (exists? fs p)))))

@@ -1,7 +1,7 @@
 (ns clj-hdfs.core
   (:import [org.apache.hadoop.conf Configuration]
            [org.apache.hadoop.mapred JobConf]
-           [org.apache.hadoop.fs Path]
+           [org.apache.hadoop.fs Path FileSystem]
            [org.apache.hadoop.io SequenceFile SequenceFile$Reader]))
 
 (defn create-configuration
@@ -13,6 +13,14 @@
 (defn path
   [str]
   (Path. str))
+
+(defn exists?
+  [fs path]
+  (.exists fs path))
+
+(defn filesystem
+  [config]
+  (FileSystem/get config))
 
 (defn create-sequence-writer
   [conf path key-class val-class]
