@@ -19,7 +19,7 @@
   (testing "Bytes"
     (let [bytes (map byte [1 2 3 4 5])
           w (BytesWritable. )]
-      (set-writable w bytes)
+      (set-writable w (byte-array bytes))
       (is (= 5 (.getSize w)))
       (is (= bytes
              (take 5 (.get w))))))

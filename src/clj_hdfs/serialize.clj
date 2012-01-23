@@ -22,7 +22,7 @@
   DoubleWritable
   (set-writable [w x] (.set w x))
   BytesWritable
-  (set-writable [w xs] (.set w (byte-array xs) 0 (count xs)))
+  (set-writable [w x] (.set w x 0 (count x)))
   FloatWritable
   (set-writable [w x] (.set w x))
   IntWritable
