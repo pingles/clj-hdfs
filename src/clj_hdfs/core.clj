@@ -4,7 +4,8 @@
            [org.apache.hadoop.mapred JobConf]
            [org.apache.hadoop.fs Path FileSystem FileStatus]
            [org.apache.hadoop.io SequenceFile SequenceFile$Reader])
-  (:use [clj-hdfs.serialize]))
+  (:use [clj-hdfs.serialize]
+        [clojure.string :only (join)]))
 
 (defn create-configuration
   [m]
@@ -13,8 +14,10 @@
     c))
 
 (defn path
-  [str]
-  (Path. str))
+  "Allows a number of path parts to be specified.
+   example: (path \"/user\" \"name\")  => (Path. \"/user/name\")"
+  [& parts]
+  (Path. (join "/" parts)))
 
 (defn exists?
   [fs path]
