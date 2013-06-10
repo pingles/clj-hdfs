@@ -7,6 +7,9 @@ Small lib to make it easier to work with data on Hadoop's Distributed File Syste
 More examples are in the tests. It's still early days but reading and writing with SequenceFiles is implemented.
 
 ```clj
+(use 'clj-hdfs.core)
+(import org.apache.hadoop.io.LongWritable)
+
 (let [tmp-path (path "./tmp/appender.seq")]
   (with-open [writer (create-sequence-writer config tmp-path LongWritable LongWritable)]
     (let [append (appender writer (LongWritable. ) (LongWritable. ))]
