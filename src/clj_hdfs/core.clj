@@ -3,7 +3,8 @@
            [org.apache.hadoop.conf Configuration]
            [org.apache.hadoop.mapred JobConf]
            [org.apache.hadoop.fs Path FileSystem FileStatus]
-           [org.apache.hadoop.io SequenceFile SequenceFile$Reader])
+           [org.apache.hadoop.io SequenceFile SequenceFile$Reader SequenceFile$CompressionType]
+           [org.apache.hadoop.io.compress DefaultCodec GzipCodec SnappyCodec])
   (:use [clj-hdfs.serialize]
         [clojure.string :only (join)]))
 
@@ -57,13 +58,29 @@
                :replication (.getReplication x)})
        (.listStatus fs path)))
 
+(def compression-types
+  {:block SequenceFile$CompressionType/BLOCK
+   :none SequenceFile$CompressionType/NONE
+   :record SequenceFile$CompressionType/RECORD})
+
+(defn compression-codecs
+  [t]
+  (condp = t
+    :gzip (GzipCodec. )
+    :snappy (SnappyCodec. )
+    (DefaultCodec. )))
+
 (defn create-sequence-writer
-  [conf path key-class val-class]
+  [conf path key-class val-class & {:keys [compression-type compression-codec]
+                                    :or   {compression-type :block
+                                           compression-codec :default}}]
   (SequenceFile/createWriter (.getFileSystem path conf)
                              conf
                              path
                              key-class
-                             val-class))
+                             val-class
+                             (compression-types compression-type)
+                             (compression-codecs compression-codec)))
 
 (defn appender
   "Creates a fn that accepts a single argument representing

@@ -10,8 +10,30 @@ More examples are in the tests. It's still early days but reading and writing wi
 (use 'clj-hdfs.core)
 (import org.apache.hadoop.io.LongWritable)
 
+(def config (create-configuration {}))
+
 (let [tmp-path (path "./tmp/appender.seq")]
   (with-open [writer (create-sequence-writer config tmp-path LongWritable LongWritable)]
+    (let [append (appender writer (LongWritable. ) (LongWritable. ))]
+      (append {130 110})))
+  (with-open [reader (create-sequence-reader config tmp-path)]
+    (let [record (first (reader-seq reader (LongWritable.) (LongWritable.)))]
+      (println record))))
+;; {130 110}
+```
+
+### Compression
+
+You can specify the compression type and compression codec you'd like to create the SequenceFile with too.
+
+```clj
+(use 'clj-hdfs.core)
+(import org.apache.hadoop.io.LongWritable)
+
+(def config (create-configuration {}))
+
+(let [tmp-path (path "./tmp/appender.seq")]
+  (with-open [writer (create-sequence-writer config tmp-path LongWritable LongWritable :compression-type :block :compression-codec :snappy)]
     (let [append (appender writer (LongWritable. ) (LongWritable. ))]
       (append {130 110})))
   (with-open [reader (create-sequence-reader config tmp-path)]
